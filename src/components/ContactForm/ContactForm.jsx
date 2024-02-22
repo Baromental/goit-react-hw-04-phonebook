@@ -1,47 +1,57 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import s from './ContactForm.module.css';
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+const ContactForm = ({ onSubmit }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  handleChange = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    name === 'name' ? setName(value) : setNumber(value);
   };
 
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const { name, number } = this.state;
-    this.props.onSubmit(name, number);
-    this.resetForm();
+    onSubmit(name, number);
+    resetForm();
   };
 
-  resetForm = () => {
-    this.setState({ name: '', number: '' });
+  const resetForm = () => {
+    setName('');
+    setNumber('');
   };
 
-  render() {
-    const { name, number } = this.state;
+  return (
+    <form className={s.form} onSubmit={handleSubmit}>
+      <label>
+        Name
+        <input
+          className={s.input}
+          type="text"
+          name="name"
+          value={name}
+          onChange={handleChange}
+          required
+        />
+      </label>
 
-    return (
-      <form className={s.form} onSubmit={this.handleSubmit}>
-        <label>
-          Name
-          <input className={s.input} type="text" name="name" value={name} onChange={this.handleChange} required />
-        </label>
+      <label>
+        Number
+        <input
+          className={s.input}
+          type="tel"
+          name="number"
+          value={number}
+          onChange={handleChange}
+          required
+        />
+      </label>
 
-        <label>
-          Number
-          <input className={s.input} type="tel" name="number" value={number} onChange={this.handleChange} required />
-        </label>
-
-        <button className={s.button} type="submit">Add contact</button>
-      </form>
-    );
-  }
-}
+      <button className={s.button} type="submit">
+        Add contact
+      </button>
+    </form>
+  );
+};
 
 export default ContactForm;
